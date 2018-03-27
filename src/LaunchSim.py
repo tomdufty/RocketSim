@@ -14,7 +14,7 @@ class Launch:
     def RunLaunch(self):
         for time in range(0,self.endtime,self.timestep):
             self.fs.update(self.timestep)
-            print(time,self.fs.vx,self.fs.vy,self.fs.ax)
+            print(time,self.fs.sy)
 
 
 class FlightState:
@@ -62,7 +62,7 @@ class FlightState:
         avmass = self.vehicle.mass + (fuel0+fuel1)/2
 
         #calcualte acceleartion for period
-        self.ax = self.vehicle.thrust*math.cos(math.radians(self.aot))/(avmass)
+        self.ax = 0  #self.vehicle.thrust*math.cos(math.radians(self.aot))/(avmass)
         self.ay = self.vehicle.thrust * math.sin(math.radians(self.aot))/avmass + GRAVITY
 
         # calculate velocity - velocivty at end based on constant average accelation to be corrected when thrust varied
@@ -84,7 +84,7 @@ class Vehicle:
         self.mass = 0
         self.fuel0 = 10000
         self.fueli = self.fuel0
-        self.thrust = 1000
+        self.thrust = 100000
         self.tsfc = 0.0001
 
     def useFuel(self,thrust,timestep):
