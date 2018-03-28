@@ -19,7 +19,6 @@ class Launch:
 
 class FlightState:
 
-
     def __init__(self):
         self.vehicle = Vehicle()
         self.ax = 0;
