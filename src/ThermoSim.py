@@ -2,19 +2,20 @@
 
 #module imports
 #import ThermoPy
+#import matplotlib
 #from PyQt4 import QtGui, QtCore
 
 
 #process class defines the start and end states of a given process
 class Process:
 
-    def __init__(self):
-        self.type = 'adiabatic'
+    def __init__(self,type = 'adiabatic',name = None):
+        self.type = type
+        self.name = name
         self.state0 = State()
         self.state1 = State()
         #isobaric,isothermal,isochoric, isentrpoic
-
-        #fixed geometric paramters
+        #fixed cycle and geometric paramters
         self.eff = 1
         self.Area0 = None
         self.Area1 = None
@@ -71,7 +72,7 @@ class Cycle:
 
     def __init__(self):
         print("new cycle")
-        self.processList = [Process]
+        self.processList = []
 
     def calculate_power(self):
         power = 0
@@ -87,7 +88,7 @@ class Cycle:
         self.processList.insert(index,process)
 
 
-#define puvlic methods
+#define public methods
 def _plotPV(cycle):
     print("plot PV diagram")
 
@@ -95,10 +96,13 @@ def _plotPV(cycle):
 if __name__ == '__main__':
     testCycle = Cycle()
     process1 = Process()
+    process1.name = '1'
     process1.setareas(100,50)
     process2 = Process()
+    process2.name = '2'
     process2.setareas(process1.Area1, 50)
     process3 = Process()
+    process3.name = '3'
     process2.setareas(process2.Area1, 10)
     testCycle.add_process(process1)
     testCycle.add_process(process2)
@@ -109,6 +113,7 @@ if __name__ == '__main__':
 
     currentState = testCycle.processList[0].state0
     for prcss in testCycle.processList:
+        print('calculate process',prcss.name)
         prcss.state0 = currentState
         prcss.calculatestate1
         currentState = prcss.state1
