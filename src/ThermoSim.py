@@ -1,12 +1,43 @@
-#define thermo dynamic cycles and calculate paramters for thermodynamic operations
+# define thermo dynamic cycles and calculate paramters for thermodynamic operations
 
-#module imports
+# module imports
+import math
 #import ThermoPy
 #import matplotlib
-#from PyQt4 import QtGui, QtCore
+# from PyQt4 import QtGui, QtCore
+
+def _calcSoS(gamma,P=None,rho=None,T=None,R=None):
+    if (P!= None and rho!=None) and (T == None and R == None):
+        a= math.sqrt(gamma*(P/rho))
+    elif (P == None and rho==None) and (T != None and R != None):
+        a= math.sqrt(gamma*T*R)
+    else:
+        print("incorrect imputs. require gamma and either RT or P/rho")
+    return a
+
+def calcM(a,v):
+    return v/a
+
+#isentropic equations
+def ponpt(gamma,M=None,rho = None,rhot = None,T=None,Tt=None):
+    if (rho!= None and rhot!=None) and (T == None and Tt == None):
+        ponpt = math.pow(rho/rhot,gamma)
+    elif (rho == None and rhot==None) and (T != None and Tt != None):
+        ponpt = math.pow(T/Tt,gamma/(gamma-1))
+    elif M != None:
+        math.pow(1+(gamma -1)/2*M*M,-gamma/(gamma-1))
+    else:
+        print("incorrect imputs")
+    return ponpt
+
+def ratioAAstar(gamma,M):
+    term1 = math.pow((gamma+1)/2,-(gamma+1)/(2*(gamma-1)))
+    term2 = math.pow(1+ (gamma-1)/2*M*M,(gamma+1)/(2*(gamma-1)))
+    ratio = term1*term2/M
+    return ratio
 
 
-#process class defines the start and end states of a given process
+# process class defines the start and end states of a given process
 class Process:
 
     def __init__(self,type = 'adiabatic',name = None):
