@@ -36,6 +36,98 @@ def ratioAAstar(gamma,M):
     ratio = term1*term2/M
     return ratio
 
+def p2v2(gamma,P,V):
+    p2v2 = (P*V**gamma)**(1/gamma)
+    return p2v2
+
+def tpr(gamma =None,pt4=None,pt5=None,Tt4=None,Tt5=None):
+    if pt4 != None and pt5 != None:
+        tpr = pt5/pt4
+    elif gamma!= None and Tt4 != None and Tt5 != None:
+        tpr = (Tt5/Tt4)**((gamma - 1)/gamma)
+    else:
+        print("incorrect inputs")
+        tpr = None
+
+    return tpr
+
+def turbinework(gamma,cp,Tt4,tpr, eff =1):
+    Q = eff*cp*Tt4(1-tpr**((gamma-1)/gamma))
+    return Q
+
+def comprwork(gamma,cp,Tt2,cpr,effc=1):
+    Q = cp*Tt2/effc*(cpr**((gamma-1)/gamma)-1)
+
+def enthalpy(cp,T):
+    h = cp*T
+    return h
+
+def exitvel(gamma,cp,Tt,eff,npr):
+    ve=math.sqrt(2*cp*Tt*eff*(1-(1/npr)**((gamma-1)/gamma)))
+    return ve
+
+def Qbalance(Qc,Qt):
+    netQ = Qt - Qc
+    return netQ
+
+def requiredtpr(gamma, Tt2,Tt4,cpr,effc=1,efft=1):
+    tprgamma = 1-Tt2/(effc*efft*Tt4)*(cpr**((gamma-1)/gamma)-1)
+    #note single gamma used - should vary with termp. gamma at 2 should be differetn to gamma at 4
+    tpr= tprgamma**(gamma/(gamma-1))
+    return tpr
+
+
+def burnerRatio(afr,effb,q,cp,Tt3):
+    # rough burning ratio - to be improved with thermpy
+    ratio = (1+ afr*effb*q*cp*Tt3)/(1+afr)
+    return ratio
+
+def afr(Tt3,Tt4,cp,effb,q):
+    #calcualte air fuel ratio for a give TiT
+    afr=(Tt4/Tt3 - 1)/(effb*q/cp*Tt3-Tt4/Tt3)
+    return afr
+
+def specificthrust(afr,ve,v0):
+    Fs = (1+afr)*ve - v0
+
+### inlet pressure recovery equations -maybe used in flight modelling??
+#based on mil spec likely presure recovery lower then this
+def milspec(effi,M):
+#returns pt2/pt0
+    if M >= 1:
+        pt2onpt0 = effi*(1-0.075*(M-1)**1.35)
+    else:
+        pt2onpt0 = effi
+
+def spillagedrag(mdot,V1,V0,A1,p1,p0,K = 0.4):
+    dspill = K*(mdot(V1-V0)*A1*(p1-p0))
+    return dspill
+###
+
+
+
+
+
+##super sonic equations to be used as part of aerodynamic analyis
+def machangle(M):
+    u = math.asin(1/M)
+    return u
+
+def prandtlmeyerv(gamma,M):
+    v = math.sqrt((gamma+1)/(gamma-1))*math.atan(math.sqrt(((gamma-1)/(gamma+1))*(M**2-1)))-math.atan(math.sqrt(M**2-1))
+    return v
+
+def turnangle(gamma,M1,M2):
+    turnangle = prandtlmeyerv(gamma,M1)-prandtlmeyerv(gamma,M2)
+    return turnangle
+
+def sspmratio(gamma,M1,M2):
+    tempratio = (1+(gamma-1)/2*(M1**2))/(1+(gamma-1)/2*(M2**2))
+    presratio = ((1+(gamma-1)/2*(M1**2))/(1+(gamma-1)/2*(M2**2)))**(gamma/(gamma-1))
+    densratio = ((1+(gamma-1)/2*(M1**2))/(1+(gamma-1)/2*(M2**2)))**(1/(gamma-1))
+    return tempratio,presratio,densratio
+##end supersnoic equations
+
 
 # process class defines the start and end states of a given process
 class Process:
