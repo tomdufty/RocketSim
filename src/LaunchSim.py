@@ -3,6 +3,23 @@ import math
 
 GRAVITY = -9.81
 
+class ControlScheme:
+
+    def __init__(self):
+        print('new control scheme')
+        self.targetvariable = 'total acceleration' #vertical acceleartion, total acceleration,drag,lift,dyamic pressure
+        self.controlfactor = 'throttle' #angle of attack or rate of climb
+        self.varyingfactor = 'time' #altitude, total velcocity, horizontal velocity
+        self.controltable = []
+        self.rateofclimb = 10 # angle of climb set and to be swept or used as rate of climb
+        self.targetaltitude =10000
+        self.targetxvelocity = 1000
+
+    def addtarget(self,x,target):
+        targetentry = [x,target]
+        self.controltable.append(targetentry)
+
+
 class Launch:
     timestep = 1
     endtime =1000
@@ -11,8 +28,29 @@ class Launch:
         print("new launch")
         self.fs = FlightState()
 
-    def RunLaunch(self):
+    def RunLaunch(self,scheme):
         for time in range(0,self.endtime,self.timestep):
+            #if scheme is acceeration:
+            # calculate rquired lift
+            # calcaulte maximum possible lift and aot
+            # calcualte drag
+            # calculate required thurst
+            # calcualte possible thurst
+            # convegre on acutal thrust
+            #
+            # if scheme stress or pressure based
+            # calcualte maximum target velocity
+            # calcualte error to velocity
+            # calacuate required acceleration
+            # repeat steps above
+            # converge on target velocity
+            #
+            # calcalate flight state
+            # update flight state
+            # update fuel
+            # next timestep
+            
+
             self.fs.update(self.timestep)
             print(time,self.fs.sy)
 
@@ -85,10 +123,17 @@ class Vehicle:
         self.fueli = self.fuel0
         self.thrust = 100000
         self.tsfc = 0.0001
+        self.cd =0.5
+        self.cl =0.5
+        self.frontA = 1
+        self.wingA = 3
 
     def useFuel(self,thrust,timestep):
         self.fueli = self.fueli -self.tsfc*thrust*timestep
 ## MAIN
 
+scheme = ControlScheme()
+
+
 launch = Launch()
-launch.RunLaunch()
+launch.RunLaunch(scheme)
