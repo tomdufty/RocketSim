@@ -3,6 +3,7 @@
 
 import math
 import csv
+import ThermoSim.py
 
 class Fuel:
 
@@ -22,9 +23,17 @@ class Fuel:
         reg = a*G^n*x^m
         return
 
-    def regsimp(self,a,gox,n):
+    def regsimp(self, a, gox, n):
         rdot = a*gox^n
         return rdot
+
+    def calc_gox(self, mdoto, A):
+        gox = mdoto/A
+        return gox
+
+    def mdotf (rho, A, rdot):
+        mdotf = rho*A*rdot
+        return mdotf
 
     def setfuel(self, name):
         self.name = name

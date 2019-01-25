@@ -6,7 +6,8 @@ import math
 #import matplotlib
 # from PyQt4 import QtGui, QtCore
 
-def _calcSoS(gamma,P=None,rho=None,T=None,R=None):
+
+def _calcSoS(gamma, P=None, rho=None, T=None, R=None):
     if (P!= None and rho!=None) and (T == None and R == None):
         a= math.sqrt(gamma*(P/rho))
     elif (P == None and rho==None) and (T != None and R != None):
@@ -15,11 +16,19 @@ def _calcSoS(gamma,P=None,rho=None,T=None,R=None):
         print("incorrect imputs. require gamma and either RT or P/rho")
     return a
 
+
 def calcM(a,v):
     return v/a
 
+
+def mdot_choke(A, pt, Tt, gamma, R):
+    #calculates choked mass flow rate for an ideal compressible gas
+    mdot = A*pt/math.sqrt(Tt)*math.sqrt(gamma/R)*((gamma+1)/2)**(-((gamma+1)/(2*(gamma-1))))
+    return mdot
+
 #isentropic equations
 def ponpt(gamma,M=None,rho = None,rhot = None,T=None,Tt=None):
+    # pressure on total pressure (pressure ratio)
     if (rho!= None and rhot!=None) and (T == None and Tt == None):
         ponpt = math.pow(rho/rhot,gamma)
     elif (rho == None and rhot==None) and (T != None and Tt != None):
@@ -30,15 +39,18 @@ def ponpt(gamma,M=None,rho = None,rhot = None,T=None,Tt=None):
         print("incorrect imputs")
     return ponpt
 
+
 def ratioAAstar(gamma,M):
-    term1 = math.pow((gamma+1)/2,-(gamma+1)/(2*(gamma-1)))
-    term2 = math.pow(1+ (gamma-1)/2*M*M,(gamma+1)/(2*(gamma-1)))
+    term1 = math.pow((gamma+1)/2, -(gamma+1)/(2*(gamma-1)))
+    term2 = math.pow(1 + (gamma-1)/2*M*M,(gamma+1)/(2*(gamma-1)))
     ratio = term1*term2/M
     return ratio
+
 
 def p2v2(gamma,P,V):
     p2v2 = (P*V**gamma)**(1/gamma)
     return p2v2
+
 
 def tpr(gamma =None,pt4=None,pt5=None,Tt4=None,Tt5=None):
     if pt4 != None and pt5 != None:
@@ -51,18 +63,22 @@ def tpr(gamma =None,pt4=None,pt5=None,Tt4=None,Tt5=None):
 
     return tpr
 
+
 def turbinework(gamma,cp,Tt4,tpr, eff =1):
     Q = eff*cp*Tt4(1-tpr**((gamma-1)/gamma))
     return Q
 
-def comprwork(gamma,cp,Tt2,cpr,effc=1):
+
+def comprwork(gamma, cp, Tt2, cpr, effc=1):
     Q = cp*Tt2/effc*(cpr**((gamma-1)/gamma)-1)
+
 
 def enthalpy(cp,T):
     h = cp*T
     return h
 
-def exitvel(gamma,cp,Tt,eff,npr):
+
+def exitvel(gamma, cp, Tt, eff, npr):
     ve=math.sqrt(2*cp*Tt*eff*(1-(1/npr)**((gamma-1)/gamma)))
     return ve
 
