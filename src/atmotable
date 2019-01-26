@@ -1,4 +1,4 @@
-#altitdue	temp(k)	pressure (bar)	density	kinematic viscosity	thermal conductivity	Speed of sound
+#altitdue temp(k) pressure (bar)	density	kinematic viscosity	thermal conductivity	Speed of sound
 0	288.15	1.01325	1.225	1.789725	2.534	340.3
 500	284.9	0.9546	1.1673025	1.7742998	2.509	338.4
 1000	281.7	0.8988	1.1116875	1.757577938	2.483	336.4
