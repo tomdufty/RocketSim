@@ -3,7 +3,7 @@
 
 import math
 import csv
-import ThermoSim.py
+from src import ThermoSim
 
 class Fuel:
 
