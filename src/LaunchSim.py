@@ -34,6 +34,7 @@ class Launch:
     def __init__(self):
         print("new launch")
         self.fs = FlightState()
+        self.log = []
 
     def setTakeoff(self,vx,theta):
         TO = FlightState()
@@ -63,11 +64,11 @@ class Launch:
             # update flight state
             # update fuel
             # next timestep
-
+            self.log.append(self.fs)
             self.fs.update(self.timestep)
-            print('roc=' + str(self.fs.calc_rate_of_Climb()))
-            error = scheme.rateofclimb - self.fs.calc_rate_of_Climb()
-            print('error=' + str(error))
+            #print('roc=' + str(self.fs.calc_rate_of_Climb()))
+            #error = scheme.rateofclimb - self.fs.calc_rate_of_Climb()
+            #print('error=' + str(error))
             print(time,self.fs.sy)
 
 
@@ -110,7 +111,7 @@ class FlightState:
 
     def calc_total_grav(self):
         #calcalates total acceleration due to gravity - centripetal acceleration
-        return AtmoSim.gravity(self.sy) - self.calc_centr_acc()
+        return AtmoSim.gravity(self.sy) #- self.calc_centr_acc()
 
     def calc_rate_of_Climb(self):
         roc = math.degrees(math.atan(self.vy/self.vx))

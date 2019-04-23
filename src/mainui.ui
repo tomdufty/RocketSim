@@ -6,46 +6,216 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>1042</width>
+    <height>767</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>660</x>
-      <y>510</y>
-      <width>75</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Launch</string>
-    </property>
-   </widget>
-   <widget class="QWidget" name="widget" native="true">
+   <widget class="QTabWidget" name="VehicleTab">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>301</width>
-      <height>221</height>
+      <width>1021</width>
+      <height>711</height>
      </rect>
     </property>
-   </widget>
-   <widget class="QWidget" name="widget_2" native="true">
-    <property name="geometry">
-     <rect>
-      <x>320</x>
-      <y>10</y>
-      <width>311</width>
-      <height>221</height>
-     </rect>
+    <property name="currentIndex">
+     <number>0</number>
     </property>
+    <widget class="QWidget" name="LaunchTab">
+     <attribute name="title">
+      <string>Launch</string>
+     </attribute>
+     <widget class="MplWidget" name="widget" native="true">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>10</y>
+        <width>941</width>
+        <height>101</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="MplWidget" name="widget_2" native="true">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>120</y>
+        <width>941</width>
+        <height>91</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushButton">
+      <property name="geometry">
+       <rect>
+        <x>840</x>
+        <y>600</y>
+        <width>75</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Launch</string>
+      </property>
+     </widget>
+     <widget class="MplWidget" name="widget_3" native="true">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>230</y>
+        <width>941</width>
+        <height>91</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="MplWidget" name="widget_4" native="true">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>330</y>
+        <width>941</width>
+        <height>91</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="MplWidget" name="widget_5" native="true">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>430</y>
+        <width>701</width>
+        <height>241</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="MotorTab">
+     <attribute name="title">
+      <string>Motor</string>
+     </attribute>
+     <widget class="QWidget" name="widget_6" native="true">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>10</y>
+        <width>1001</width>
+        <height>261</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QWidget" name="formLayoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>280</y>
+        <width>381</width>
+        <height>381</height>
+       </rect>
+      </property>
+      <layout class="QFormLayout" name="formLayout">
+       <item row="0" column="0">
+        <widget class="QLabel" name="oxidiserLabel">
+         <property name="text">
+          <string>Oxidiser</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QComboBox" name="oxidiserComboBox"/>
+       </item>
+       <item row="1" column="0">
+        <widget class="QLabel" name="fuelLabel">
+         <property name="text">
+          <string>Fuel</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QComboBox" name="fuelComboBox"/>
+       </item>
+       <item row="2" column="0">
+        <widget class="QLabel" name="fullThrottleOxidiserMassFlowRateLabel">
+         <property name="text">
+          <string>Full Throttle Oxidiser Mass Flow Rate</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLineEdit" name="fullThrottleOxidiserMassFlowRateLineEdit"/>
+       </item>
+       <item row="4" column="0">
+        <widget class="QLabel" name="throatDiameterLabel">
+         <property name="text">
+          <string>Throat Diameter</string>
+         </property>
+        </widget>
+       </item>
+       <item row="4" column="1">
+        <widget class="QLineEdit" name="throatDiameterLineEdit"/>
+       </item>
+       <item row="5" column="0">
+        <widget class="QLabel" name="expansionRationLabel">
+         <property name="text">
+          <string>Expansion Ratio</string>
+         </property>
+        </widget>
+       </item>
+       <item row="5" column="1">
+        <widget class="QLineEdit" name="expansionRationLineEdit"/>
+       </item>
+       <item row="6" column="0">
+        <widget class="QLabel" name="nozzleExitDiameterLabel">
+         <property name="text">
+          <string>Nozzle Exit Diameter</string>
+         </property>
+        </widget>
+       </item>
+       <item row="6" column="1">
+        <widget class="QLineEdit" name="nozzleExitDiameterLineEdit"/>
+       </item>
+       <item row="7" column="0">
+        <widget class="QLabel" name="fuelGrainMassLabel">
+         <property name="text">
+          <string>Fuel Grain Mass</string>
+         </property>
+        </widget>
+       </item>
+       <item row="7" column="1">
+        <widget class="QLineEdit" name="fuelGrainMassLineEdit"/>
+       </item>
+       <item row="8" column="0">
+        <widget class="QLabel" name="motorDryMassLabel">
+         <property name="text">
+          <string>Motor Dry Mass</string>
+         </property>
+        </widget>
+       </item>
+       <item row="8" column="1">
+        <widget class="QLineEdit" name="motorDryMassLineEdit"/>
+       </item>
+       <item row="3" column="0">
+        <widget class="QLabel" name="fullThrottleChamberPressureLabel">
+         <property name="text">
+          <string>Full Throttle Chamber Pressure</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QLineEdit" name="fullThrottleChamberPressureLineEdit"/>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab">
+     <attribute name="title">
+      <string>Vehicle</string>
+     </attribute>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -53,13 +223,21 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1042</width>
      <height>21</height>
     </rect>
    </property>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MplWidget</class>
+   <extends>QWidget</extends>
+   <header>mplwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
