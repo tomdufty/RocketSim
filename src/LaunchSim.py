@@ -2,6 +2,8 @@ import math
 from src import AtmoSim
 from src import VehicleSim as VS
 import csv
+import matplotlib
+import PyQt5
 
 GRAVITY = -9.81
 
@@ -143,15 +145,16 @@ class FlightState:
 
 
 
-## MAIN
-v = VS.Vehicle()
-atmo = AtmoSim.load_atmosphere()
-v.load_ldcurve()
-cl = v.lookup_cl(3)
-
-print("lift =")
-print(v.calc_lift(atmo, cl, 1000, 0))
-
-scheme = ControlScheme()
-launch = Launch()
-launch.RunLaunch(scheme)
+# ## MAIN
+# def Launch():
+    # v = VS.Vehicle()
+    # atmo = AtmoSim.load_atmosphere()
+    # v.load_ldcurve()
+    # cl = v.lookup_cl(3)
+    #
+    # print("lift =")
+    # print(v.calc_lift(atmo, cl, 1000, 0))
+    #
+    # scheme = ControlScheme()
+    # launch = Launch()
+    # launch.RunLaunch(scheme)
