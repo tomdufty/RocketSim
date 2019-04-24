@@ -37,43 +37,13 @@ class Launch:
         self.fs = FlightState()
         self.log = []
 
-    def setTakeoff(self,vx,theta):
+    def setTakeoff(self,v,theta):
         print("setting take off parameters")
         TO = FlightState()
-        TO.vx = vx
+        TO.vy = math.sin(math.radians(theta))*v
+        TO.vx = math.cos(math.radians(theta)) * v
         TO.aot = theta
         self.fs = TO
-
-    def RunLaunch(self,scheme):
-        self.setTakeoff(scheme.takeOffV, scheme.takeoffAng)
-        for time in range(0, self.endtime, self.timestep):
-            #if scheme is acceeration:
-            # calculate rquired lift
-            # calcaulte maximum possible lift and aot
-            # calcualte drag
-            # calculate required thurst
-            # calcualte possible thurst
-            # convegre on acutal thrust
-            #
-            # if scheme stress or pressure based
-            # calcualte maximum target velocity
-            # calcualte error to velocity
-            # calacuate required acceleration
-            # repeat steps above
-            # converge on target velocity
-            #
-            # calcalate flight state
-            # update flight state
-            # update fuel
-            # next timestep
-            fstemp = self.fs
-            self.log.append(fstemp)
-            self.fs.update(self.timestep)
-            #print('roc=' + str(self.fs.calc_rate_of_Climb()))
-            #error = scheme.rateofclimb - self.fs.calc_rate_of_Climb()
-            #print('error=' + str(error))
-            print(time,self.fs.sy)
-
 
 class FlightState:
 
@@ -120,10 +90,10 @@ class FlightState:
         roc = math.degrees(math.atan(self.vy/self.vx))
         return roc
 
-    def update(self,timestep):
+    def update(self, timestep):
         # note thrust and angle of thrust constant for timestep - to be updated when thrust more acurate.
         #acceleration based on avearage mass taken as linear avearge of timestep
-        #change
+
         fuel0 = self.vehicle.fueli
         self.vehicle.useFuel(self.vehicle.thrust, timestep)
         fuel1 = self.vehicle.fueli
@@ -131,8 +101,8 @@ class FlightState:
         avmass = self.vehicle.mass + (fuel0+fuel1)/2
 
         #calcualte acceleartion for period
-        self.ax = 0  #self.vehicle.thrust*math.cos(math.radians(self.aot))/(avmass)
-        self.ay = self.vehicle.thrust * math.sin(math.radians(self.aot))/avmass + GRAVITY
+        self.ax = 0 #self.vehicle.thrust*math.cos(math.radians(self.aot))/(avmass)
+        self.ay = GRAVITY # self.vehicle.thrust * math.sin(math.radians(self.aot))/avmass
 
         # calculate velocity - velocity at end based on constant average acceleration to be corrected when thrust varied
         vx0 = self.vx
@@ -143,8 +113,8 @@ class FlightState:
         self.vy = vy1
 
         #calcualte displacement based on average velocity
-        self.sx = self.sx + (vx0 +vx1)/2*timestep
-        self.sy = self.sy + (vy0 + vy1) / 2 * timestep
+        self.sx = self.sx + (vx0 + vx1)/2*timestep
+        self.sy = self.sy + (vy0 + vy1)/2*timestep
 
 
 
