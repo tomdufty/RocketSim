@@ -1,6 +1,7 @@
 import math
 from src import AtmoSim
 from src import VehicleSim as VS
+import numpy as np
 import csv
 import matplotlib
 import PyQt5
@@ -37,6 +38,7 @@ class Launch:
         self.log = []
 
     def setTakeoff(self,vx,theta):
+        print("setting take off parameters")
         TO = FlightState()
         TO.vx = vx
         TO.aot = theta
@@ -64,7 +66,8 @@ class Launch:
             # update flight state
             # update fuel
             # next timestep
-            self.log.append(self.fs)
+            fstemp = self.fs
+            self.log.append(fstemp)
             self.fs.update(self.timestep)
             #print('roc=' + str(self.fs.calc_rate_of_Climb()))
             #error = scheme.rateofclimb - self.fs.calc_rate_of_Climb()
