@@ -29,7 +29,7 @@ class ControlScheme:
 
 
 class Launch:
-    timestep = 1
+    timestep = 0.1
     endtime =1000
 
     def __init__(self):
@@ -56,7 +56,7 @@ class FlightState:
         self.sx = 0
         self.sy = 0
         self.aoa = 0
-        self.aot = 90
+        self.aot = 0
         self.wz = 0
         print("new state")
 
@@ -94,21 +94,24 @@ class FlightState:
         # note thrust and angle of thrust constant for timestep - to be updated when thrust more acurate.
         #acceleration based on avearage mass taken as linear avearge of timestep
 
-        fuel0 = self.vehicle.fueli
+        fuel0 = 1000 #self.vehicle.fueli
         self.vehicle.useFuel(self.vehicle.thrust, timestep)
         fuel1 = self.vehicle.fueli
 
         avmass = self.vehicle.mass + (fuel0+fuel1)/2
 
         #calcualte acceleartion for period
-        self.ax = 0 #self.vehicle.thrust*math.cos(math.radians(self.aot))/(avmass)
-        self.ay = GRAVITY # self.vehicle.thrust * math.sin(math.radians(self.aot))/avmass
+        ax0 = self.ax
+        ay0 = self.ay
+        self.ax = self.vehicle.thrust*math.cos(math.radians(self.aot))/(avmass)
+        print("ax =",self.vehicle.thrust*math.cos(math.radians(self.aot))/(avmass))
+        self.ay = GRAVITY + self.vehicle.thrust * math.sin(math.radians(self.aot))/avmass
 
         # calculate velocity - velocity at end based on constant average acceleration to be corrected when thrust varied
         vx0 = self.vx
         vy0 = self.vy
-        vx1 = self.vx + self.ax*timestep
-        vy1 = self.vy + self.ay*timestep
+        vx1 = self.vx + (self.ax+ax0)/2*timestep
+        vy1 = self.vy + (self.ay+ay0)/2*timestep
         self.vx = vx1
         self.vy = vy1
 
