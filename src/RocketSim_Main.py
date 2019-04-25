@@ -7,9 +7,7 @@ from src import VehicleSim as VS
 import matplotlib
 import sys
 import numpy as np
-import random
-
-
+import time as timing
 
 class mainWindow(QtWidgets.QMainWindow):
 
@@ -19,7 +17,6 @@ class mainWindow(QtWidgets.QMainWindow):
         self.ui.setupUi(self)
 
 
-
     def launchClicked(self):
         v = VS.Vehicle()
         atmo = AtmoSim.load_atmosphere()
@@ -27,15 +24,16 @@ class mainWindow(QtWidgets.QMainWindow):
         cl = v.lookup_cl(3)
         print("lift =")
         print(v.calc_lift(atmo, cl, 1000, 0))
-        h1, = self.ui.widget.canvas.ax.plot([],[])
-
-
+        self.data = []
 
         scheme = LaunchSim.ControlScheme()
         launch = LaunchSim.Launch()
-        launch.setTakeoff(scheme.takeOffV, scheme.takeoffAng)
+        print(self.ui.lv_lineEdit.text(), float(self.ui.la_lineEdit.text()))
+        launch.setTakeoff(float(self.ui.lv_lineEdit.text()), float(self.ui.la_lineEdit.text()))
 
-        for time in range(0, launch.endtime, launch.timestep):
+        time = 0
+        while time < launch.endtime and launch.fs.sy >=0:
+        #for time in range(0, launch.endtime, launch.timestep):
             #if scheme is acceeration:
             # calculate rquired lift
             # calcaulte maximum possible lift and aot
@@ -56,49 +54,70 @@ class mainWindow(QtWidgets.QMainWindow):
             # update fuel
             # next timestep
 
-            launch.fs.update(launch.timestep)
+
             #print('roc=' + str(self.fs.calc_rate_of_Climb()))
             #error = scheme.rateofclimb - self.fs.calc_rate_of_Climb()
             #print('error=' + str(error))
             print(time, launch.fs.sy)
-            data = [time, launch.fs.sy]
-            print(data)
-            self.update_line(h1,data)
+
+            self.data.append([time, launch.fs.ax, launch.fs.ay, launch.fs.vx, launch.fs.vy, launch.fs.sx, launch.fs.sy,launch.fs.vehicle.thrust])
+            self.npdata = np.array(self.data)
+            launch.fs.update(launch.timestep)
+            time += launch.timestep
 
 
-
-        #launch.RunLaunch(scheme)
 
         print("launch succesfull")
-        # self.update_graph()
 
-    def update_line(self, hl, new_data):
-        print("updating line")
-        print(hl)
-        hl.set_xdata(np.append(hl.get_xdata(), new_data))
-        hl.set_ydata(np.append(hl.get_ydata(), new_data))
-        print("h1 data set")
-
-        self.ui.widget.canvas.ax.draw()
-
-
+        self.update_graph()
 
     def update_graph(self):
-        fs = 500
-        f = random.randint(1, 100)
-        ts = 1 / fs
-        length_of_signal = 100
-        t = np.linspace(0, 1, length_of_signal)
+        # # update forces graph
+        self.ui.widget_F.canvas.ax.clear()
+        self.ui.widget_F.canvas.ax.plot(self.npdata[:, 0], self.npdata[:, 7])
+        #self.ui.widget_F.canvas.ax.plot(self.npdata[:, 0], self.npdata[:, 2])
+        self.ui.widget_F.canvas.ax.legend(('Thrust', 'ay'), loc='upper right')
+        self.ui.widget_F.canvas.ax.set_title('Forces')
+        self.ui.widget_F.canvas.ax.relim()
+        self.ui.widget_F.canvas.ax.autoscale_view()
+        self.ui.widget_F.canvas.draw()
 
-        cosinus_signal = np.cos(2 * np.pi * f * t)
-        sinus_signal = np.sin(2 * np.pi * f * t)
+        # #update acceleration graph
+        self.ui.widget_a.canvas.ax.clear()
+        self.ui.widget_a.canvas.ax.plot(self.npdata[:, 0], self.npdata[:, 1])
+        self.ui.widget_a.canvas.ax.plot(self.npdata[:, 0], self.npdata[:, 2])
+        self.ui.widget_a.canvas.ax.legend(('ax', 'ay'), loc='upper right')
+        self.ui.widget_a.canvas.ax.set_title('Acceleration')
+        self.ui.widget_a.canvas.ax.relim()
+        self.ui.widget_a.canvas.ax.autoscale_view()
+        self.ui.widget_a.canvas.draw()
 
-        self.ui.widget.canvas.ax.clear()
-        self.ui.widget.canvas.ax.plot(t, cosinus_signal)
-        self.ui.widget.canvas.ax.plot(t, sinus_signal)
-        self.ui.widget.canvas.ax.legend(('cosinus', 'sinus'), loc='upper right')
-        self.ui.widget.canvas.ax.set_title(' Cosinus - Sinus Signal')
-        self.ui.widget.canvas.draw()
+        # # update velocity graph
+        self.ui.widget_v.canvas.ax.clear()
+        self.ui.widget_v.canvas.ax.plot(self.npdata[:, 0], self.npdata[:, 3])
+        self.ui.widget_v.canvas.ax.plot(self.npdata[:, 0], self.npdata[:, 4])
+        self.ui.widget_v.canvas.ax.legend(('ax', 'ay'), loc='upper right')
+        self.ui.widget_v.canvas.ax.set_title('Velocity')
+        self.ui.widget_v.canvas.ax.relim()
+        self.ui.widget_v.canvas.ax.autoscale_view()
+        self.ui.widget_v.canvas.draw()
+        # # update displacement graph
+        self.ui.widget_s.canvas.ax.clear()
+        self.ui.widget_s.canvas.ax.plot(self.npdata[:, 0], self.npdata[:, 5])
+        self.ui.widget_s.canvas.ax.plot(self.npdata[:, 0], self.npdata[:, 6])
+        self.ui.widget_s.canvas.ax.legend(('ax', 'ay'), loc='upper right')
+        self.ui.widget_s.canvas.ax.set_title('Displacement')
+        self.ui.widget_s.canvas.ax.relim()
+        self.ui.widget_s.canvas.ax.autoscale_view()
+        self.ui.widget_s.canvas.draw()
+        # update trajectory
+        self.ui.Trajectory_widget.canvas.ax.clear()
+        self.ui.Trajectory_widget.canvas.ax.plot(self.npdata[:, 5], self.npdata[:, 6])
+        self.ui.Trajectory_widget.canvas.ax.set_title('Trajectory')
+        self.ui.Trajectory_widget.canvas.ax.relim()
+        self.ui.Trajectory_widget.canvas.ax.autoscale_view()
+        self.ui.Trajectory_widget.canvas.draw()
+
 
 
 app = QtWidgets.QApplication([])
