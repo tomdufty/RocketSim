@@ -27,6 +27,9 @@ def get_atmo_value(atmo, altitude, variable):
     elif variable == 'rho':
         print("interpolating density")
         col = 3
+    elif variable == 'sos':
+        print("interpolating speed of sound")
+        col = 6
     else:
         print("varibale not found")
     a0 = None

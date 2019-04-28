@@ -42,27 +42,28 @@ class Wing:
 class Vehicle:
     def __init__(self):
         print("vehicle created")
-        self.mass = 0
-        self.fuel0 = 10000
+        self.mass = 1
+        self.fuel0 = 1000
         self.fueli = self.fuel0
-        self.thrust = 100000
-        self.tsfc = 0.0001
+        self.thrust = 10
+        self.tsfc = 1
         self.cd =0.5
         self.cl =0.5
         self.frontA = 1
         self.wingA = 3
 
     def load_ldcurve(self):
-        atmo = []
 
         with open('LDcurve') as csvDataFile:
             csvReader = list(csv.reader(csvDataFile, delimiter='\t'))
             ld = csvReader
-            print("atmosphere loaded")
+            print("LDcurve loaded")
             self.ld = ld
 
     def useFuel(self,thrust, timestep):
-        self.fueli = self.fueli -self.tsfc*thrust*timestep
+        self.fueli = max(self.fueli -self.tsfc*thrust*timestep,0)
+        if self.fueli == 0:
+            self.thrust = 0
 
     def calc_lift(self, atmo, cl, vt, alt):
         print("calculating lift")
@@ -73,8 +74,9 @@ class Vehicle:
     def calc_drag(self):
         print("calculating drag")
 
-    def lookup_cl(self,M):
+    def lookup_cl(self, M):
         #lookups cl from CLtable previous loaded. itnerpolates on M
+        print("looking up CL")
         ld = self.ld
         col = 1
         a0 = None

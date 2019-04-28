@@ -84,11 +84,14 @@ class FlightState:
 
         #calculate lift
         sos = AtmoSim.get_atmo_value(self.atmo,self.sy,'sos')
-        print ("sos",sos)
-        M = self.vx/sos
-        #cl = self.vehicle.lookup_cl(M)
-        #print(cl)
-        #self.vehicle.calc_lift()
+        print ("sos", sos)
+        vtotal = math.sqrt(self.vx**2 + self.vy**2)
+        M = vtotal/sos
+        print("M",M)
+        cl = self.vehicle.lookup_cl(M)
+        print("cl", cl)
+        lift = self.vehicle.calc_lift(self.atmo,cl,vtotal,self.sy)
+        print("lift",lift)
 
         #calcualte acceleartion for period
 

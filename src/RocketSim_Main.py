@@ -15,16 +15,12 @@ class mainWindow(QtWidgets.QMainWindow):
         super(mainWindow, self).__init__()
         self.ui = mainUI.Ui_MainWindow()
         self.ui.setupUi(self)
-
+        self.data = []
 
     def launchClicked(self):
         v = VS.Vehicle()
-        atmo = AtmoSim.load_atmosphere()
         v.load_ldcurve()
-        cl = v.lookup_cl(3)
-        print("lift =")
-        print(v.calc_lift(atmo, cl, 1000, 0))
-        self.data = []
+
 
         scheme = LaunchSim.ControlScheme()
         launch = LaunchSim.Launch()
