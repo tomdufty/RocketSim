@@ -18,16 +18,19 @@ class mainWindow(QtWidgets.QMainWindow):
         self.data = []
 
     def launchClicked(self):
-        v = VS.Vehicle()
-        v.load_ldcurve()
+        # v = VS.Vehicle()
+        # v.load_ldcurve()
 
 
         scheme = LaunchSim.ControlScheme()
         launch = LaunchSim.Launch()
-        print(self.ui.lv_lineEdit.text(), float(self.ui.la_lineEdit.text()))
+
+        launch.fs.vehicle.load_ldcurve()
+
         launch.setTakeoff(float(self.ui.lv_lineEdit.text()), float(self.ui.la_lineEdit.text()))
 
         time = 0
+        print("launching ...")
         while time < launch.endtime and launch.fs.sy >=0:
         #for time in range(0, launch.endtime, launch.timestep):
             #if scheme is acceeration:
@@ -54,10 +57,17 @@ class mainWindow(QtWidgets.QMainWindow):
             #print('roc=' + str(self.fs.calc_rate_of_Climb()))
             #error = scheme.rateofclimb - self.fs.calc_rate_of_Climb()
             #print('error=' + str(error))
-            print(time, launch.fs.sy)
+            print("time,sy=", time, launch.fs.sy)
 
             self.data.append([time, launch.fs.ax, launch.fs.ay, launch.fs.vx, launch.fs.vy, launch.fs.sx, launch.fs.sy,launch.fs.vehicle.thrust])
             self.npdata = np.array(self.data)
+            try:
+                if launch.fs.vehicle.ld is None:
+                    print("nope 1 ")
+                else:
+                    print("ld exists 1")
+            except:
+                print("nope")
             launch.fs.update(launch.timestep)
             time += launch.timestep
 

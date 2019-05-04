@@ -32,12 +32,12 @@ class Launch:
         print("new launch")
         self.fs = FlightState()
         self.log = []
-        print("loading atmosphere")
+
 
     def setTakeoff(self, v, theta):
 
         print("setting take off parameters")
-        TO = FlightState()
+        TO = self.fs
         TO.vy = math.sin(math.radians(theta)) * v
         TO.vx = math.cos(math.radians(theta)) * v
         TO.aot = theta
