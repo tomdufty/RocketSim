@@ -8,6 +8,7 @@ import matplotlib
 import sys
 import numpy as np
 import time as timing
+import math
 
 class mainWindow(QtWidgets.QMainWindow):
 
@@ -58,16 +59,10 @@ class mainWindow(QtWidgets.QMainWindow):
             #error = scheme.rateofclimb - self.fs.calc_rate_of_Climb()
             #print('error=' + str(error))
             print("time,sy=", time, launch.fs.sy)
-
-            self.data.append([time, launch.fs.ax, launch.fs.ay, launch.fs.vx, launch.fs.vy, launch.fs.sx, launch.fs.sy,launch.fs.vehicle.thrust])
+            print("vtotal",math.sqrt(launch.fs.vx**2 +launch.fs.vy**2 ))
+            self.data.append([time, launch.fs.ax, launch.fs.ay, launch.fs.vx, launch.fs.vy, launch.fs.sx,
+                              launch.fs.sy,launch.fs.vehicle.thrust, launch.fs.vehicle.lift, launch.fs.vehicle.drag])
             self.npdata = np.array(self.data)
-            try:
-                if launch.fs.vehicle.ld is None:
-                    print("nope 1 ")
-                else:
-                    print("ld exists 1")
-            except:
-                print("nope")
             launch.fs.update(launch.timestep)
             time += launch.timestep
 
@@ -81,8 +76,9 @@ class mainWindow(QtWidgets.QMainWindow):
         # # update forces graph
         self.ui.widget_F.canvas.ax.clear()
         self.ui.widget_F.canvas.ax.plot(self.npdata[:, 0], self.npdata[:, 7])
-        #self.ui.widget_F.canvas.ax.plot(self.npdata[:, 0], self.npdata[:, 2])
-        self.ui.widget_F.canvas.ax.legend(('Thrust', 'ay'), loc='upper right')
+        self.ui.widget_F.canvas.ax.plot(self.npdata[:, 0], self.npdata[:, 8])
+        self.ui.widget_F.canvas.ax.plot(self.npdata[:, 0], self.npdata[:, 9])
+        self.ui.widget_F.canvas.ax.legend(('Thrust', 'Lift','Drag'), loc='upper right')
         self.ui.widget_F.canvas.ax.set_title('Forces')
         self.ui.widget_F.canvas.ax.relim()
         self.ui.widget_F.canvas.ax.autoscale_view()
@@ -118,6 +114,7 @@ class mainWindow(QtWidgets.QMainWindow):
         self.ui.widget_s.canvas.draw()
         # update trajectory
         self.ui.Trajectory_widget.canvas.ax.clear()
+        self.ui.widget_F.canvas.draw()
         self.ui.Trajectory_widget.canvas.ax.plot(self.npdata[:, 5], self.npdata[:, 6])
         self.ui.Trajectory_widget.canvas.ax.set_title('Trajectory')
         self.ui.Trajectory_widget.canvas.ax.relim()

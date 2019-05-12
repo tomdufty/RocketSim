@@ -86,17 +86,30 @@ class FlightState:
         sos = AtmoSim.get_atmo_value(self.atmo,self.sy,'sos')
         print ("sos", sos)
         vtotal = math.sqrt(self.vx**2 + self.vy**2)
+        if self.vx == 0:
+            Omega = 90
+        else:
+            Omega =  math.degrees(math.atan(self.vy/self.vx))
+        print("angle of flight", Omega)
+        #note angle of attack and angle of thrust should be referenced to vtotal
         M = vtotal/sos
-        print("M",M)
         cl = self.vehicle.lookup_cl(M)
-        print("cl", cl)
         lift = self.vehicle.calc_lift(self.atmo,cl,vtotal,self.sy)
-        print("lift",lift)
+        liftx = lift*math.cos(math.radians(Omega))
+        lifty = lift*math.sin(math.radians(Omega))
+        self.vehicle.lift = lift
+        cd = self.vehicle.lookup_cd(M)
+        drag = self.vehicle.calc_drag(self.atmo, cd, vtotal, self.sy)
+        dragx = drag * math.cos(math.radians(Omega))
+        dragy = drag * math.sin(math.radians(Omega))
+        self.vehicle.drag = drag
+
 
         #calcualte acceleartion for period
-
-        self.ax = self.vehicle.thrust*math.cos(math.radians(self.aot))/(avmass)
-        self.ay = GRAVITY + self.vehicle.thrust * math.sin(math.radians(self.aot))/avmass
+        thrustx =self.vehicle.thrust*math.cos(math.radians(self.aot))
+        thrusty = self.vehicle.thrust * math.sin(math.radians(self.aot))
+        self.ax = (thrustx + liftx - dragx )/avmass
+        self.ay = GRAVITY + (thrusty + lifty - dragy)/avmass
 
         # calculate velocity - velocity at end based on constant average acceleration to be corrected when thrust varied
         vx0 = self.vx

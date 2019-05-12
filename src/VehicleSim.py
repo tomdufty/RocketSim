@@ -46,6 +46,8 @@ class Vehicle:
         self.fuel0 = 1000
         self.fueli = self.fuel0
         self.thrust = 10
+        self.drag = 0
+        self.lift = 0
         self.tsfc = 1
         self.cd =0.5
         self.cl =0.5
@@ -67,12 +69,15 @@ class Vehicle:
 
     def calc_lift(self, atmo, cl, vt, alt):
         print("calculating lift")
-        AtmoSim.get_atmo_value(atmo, alt, 'rho')
-        lift = 0.5 * cl * (vt**2) * self.wingA
+        rho = AtmoSim.get_atmo_value(atmo, alt, 'rho')
+        lift = 0.5 * cl * rho * (vt**2) * self.wingA
         return lift
 
-    def calc_drag(self):
+    def calc_drag(self,atmo, cd, vt, alt):
         print("calculating drag")
+        rho = AtmoSim.get_atmo_value(atmo, alt, 'rho')
+        drag = 0.5 * cd * rho * (vt ** 2) * self.frontA
+        return drag
 
     def lookup_cl(self, M):
         #lookups cl from CLtable previous loaded. itnerpolates on M
@@ -81,6 +86,8 @@ class Vehicle:
         col = 1
         a0 = None
         i = 1
+        print("m atcual", M)
+        print("test",float(ld[i][0]),i)
         while float(ld[i][0]) <= M:
             a0 = float(ld[i][0])
             i = i + 1
@@ -91,8 +98,6 @@ class Vehicle:
         print(a1)
         ratio = (M - a0) / (a1 - a0)
         p = ratio * (p1 - p0) + p0
-        print("cl = ")
-        print(p)
         return p
 
     def lookup_cd(self,M):
@@ -111,8 +116,6 @@ class Vehicle:
         print(a1)
         ratio = (M - a0) / (a1 - a0)
         p = ratio * (p1 - p0) + p0
-        print("cl = ")
-        print(p)
         return p
 
 
